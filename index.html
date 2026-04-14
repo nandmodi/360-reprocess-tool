@@ -120,7 +120,7 @@
     
     <div class="form-group">
         <label>Access Password</label>
-        <input type="password" id="login_password" placeholder="Enter password">
+        <input type="password" id="login_password" placeholder="Enter password" onkeydown="if(event.key === 'Enter') handleLogin()">
     </div>
     
     <button onclick="handleLogin()">Sign In</button>
@@ -160,7 +160,7 @@
 </div>
 
 <script>
-    // HARDCODED LOCAL PASSWORDS
+    // HARDCODED LOCAL PASSWORDS UPDATED
     const USER_VAULT = {
         "admin@spyne.ai": "admin@123",
         "sarika.rawat@spyne.co.in": "sarika@2003",
