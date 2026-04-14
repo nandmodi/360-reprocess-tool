@@ -188,8 +188,34 @@
         }
     }
 
+    async function submitToGoogleForm(sku, bgId, email) {
+        // Google Form details based on pre-fill link provided
+        const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSf6Tx5CKFLcG-R8djq24_bUetCT780hUUd34XIWZCZeS-0Dbg/formResponse";
+        
+        const formData = new URLSearchParams();
+        formData.append("entry.2033020472", sku);        // SKU ID
+        formData.append("entry.189620745", bgId || "");  // Background ID
+        formData.append("entry.213406280", email);       // Email
+
+        try {
+            // mode: 'no-cors' is necessary because Google Forms does not return CORS headers
+            await fetch(formUrl, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: formData
+            });
+            console.log("Form data sent to Google Sheets");
+        } catch (e) {
+            console.error("Form submission failed", e);
+        }
+    }
+
     async function callAPI() {
-        const sku = document.getElementById("sku_id").value;
+        const skuInput = document.getElementById("sku_id");
+        const bgInput = document.getElementById("bgId");
+        const sku = skuInput.value;
+        const bgId = bgInput.value;
         const btn = document.getElementById("submitBtn");
         const loader = document.getElementById("loading");
 
@@ -204,7 +230,7 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     sku_id: sku,
-                    bgId: document.getElementById("bgId").value || null,
+                    bgId: bgId || null,
                     user_email_id: loggedInUser,
                     stablize: document.getElementById("type").value,
                     reason: "Web Reprocess Tool",
@@ -213,7 +239,14 @@
             });
             
             if (response.ok) {
+                // Submit to Google Form on success
+                await submitToGoogleForm(sku, bgId, loggedInUser);
+                
                 showMessage("Reprocess request successful.", "success");
+                
+                // Clear fields after success
+                skuInput.value = "";
+                bgInput.value = "";
             } else {
                 const data = await response.json();
                 throw new Error(data.message || "Reprocess failed");
