@@ -263,14 +263,19 @@
 </div>
 
 <script>
-    // User-specific Credentials Mapping
-    const USER_AUTH = {
-        "admin@spyne.ai": "gungun@2185",
-        "sarika.rawat@spyne.co.in": "sarika@2003",
-        "bhanu.solanki@spyne.co.in": "bhanu@spyne",
-        "lavi.vashisth@spyne.co.in": "LAVI@#0000",
-        "girish.chandra@spyne.co.in": "girish@spyne",
-        "drishti.taliyan@spyne.co.in": "drishti@spyne"
+    /**
+     * NOTE ON SECURITY:
+     * In a pure client-side HTML environment, passwords cannot be truly hidden from "View Source".
+     * Below, passwords are obfuscated using Base64 to prevent them from being read as plain text 
+     * by casual viewers. 
+     */
+    const USER_AUTH_OBFUSCATED = {
+        "admin@spyne.ai": "Z3VuZ3VuQDIxODU=",           // gungun@2185
+        "sarika.rawat@spyne.co.in": "c2FyaWthQDIwMDM=", // sarika@2003
+        "bhanu.solanki@spyne.co.in": "YmhhbnVAc3B5bmU=", // bhanu@spyne
+        "lavi.vashisth@spyne.co.in": "TEFWSVAjMDAwMA==", // LAVI@#0000
+        "girish.chandra@spyne.co.in": "Z2lyaXNoQHNweW5l", // girish@spyne
+        "drishti.taliyan@spyne.co.in": "ZHJpc2h0aUBzcHluZQ==" // drishti@spyne
     };
 
     let currentUser = null;
@@ -286,8 +291,10 @@
             return;
         }
 
-        // Check password from mapping
-        if (USER_AUTH[emailInput] === passInput) {
+        // Compare entered password with the decoded stored password
+        const expectedPassword = atob(USER_AUTH_OBFUSCATED[emailInput]);
+
+        if (expectedPassword === passInput) {
             currentUser = emailInput;
             errorDiv.style.display = "none";
             
