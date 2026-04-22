@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spyne Reprocess Tool | Simple Access</title>
+    <title>Spyne Reprocess Tool</title>
     <style>
         :root {
             --primary: #3b82f6;
             --primary-hover: #2563eb;
-            --bg-dark: #0f172a;
-            --card-bg: #1e293b;
+            --bg-dark: #1a2230;
+            --card-bg: #242f41;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --input-bg: #334155;
-            --success: #10b981;
-            --error: #f87171;
             --border: rgba(255,255,255,0.1);
         }
 
@@ -22,7 +20,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-dark);
+            background-color: #0f172a;
             color: var(--text-main);
             display: flex;
             justify-content: center;
@@ -34,25 +32,51 @@
 
         .container {
             background: var(--card-bg);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
             width: 100%;
-            max-width: 450px;
+            max-width: 420px;
             border: 1px solid var(--border);
-            animation: slideUp 0.4s ease-out;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
         }
 
-        h2 { margin: 0 0 10px 0; font-size: 1.5rem; font-weight: 700; text-align: center; }
-        p.subtitle { color: var(--text-muted); font-size: 0.9rem; text-align: center; margin-bottom: 30px; }
+        h2 { margin: 0; font-size: 1.5rem; font-weight: 700; }
         
+        .user-badge {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 24px;
+            display: block;
+        }
+
+        .logout-btn {
+            background: #475569;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
         .form-group { margin-bottom: 20px; }
-        label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 8px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+        label { 
+            display: block; 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            margin-bottom: 8px; 
+            color: var(--text-muted); 
+            text-transform: uppercase; 
+            letter-spacing: 0.025em; 
+        }
 
         input, select {
             width: 100%;
@@ -65,30 +89,45 @@
             outline: none;
         }
 
+        input::placeholder { color: #64748b; }
         input:focus, select:focus { border-color: var(--primary); }
 
-        button {
-            width: 100%; padding: 14px; background: var(--primary); color: white;
-            border: none; border-radius: 10px; font-weight: 600; cursor: pointer; 
-            margin-top: 10px; font-size: 1rem;
+        .submit-btn {
+            width: 100%; 
+            padding: 14px; 
+            background: var(--primary); 
+            color: white;
+            border: none; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            font-size: 1rem;
+            margin-top: 10px;
         }
 
-        button:hover { background: var(--primary-hover); transform: translateY(-1px); }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .submit-btn:hover { background: var(--primary-hover); }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        #status-msg { display: none; margin-top: 20px; padding: 15px; border-radius: 10px; font-size: 0.9rem; text-align: center; font-weight: 500; }
-        .success-box { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid var(--success); }
-        .error-box { background: rgba(239, 68, 68, 0.15); color: var(--error); border: 1px solid var(--error); }
+        #status-msg { 
+            display: none; 
+            margin-top: 20px; 
+            padding: 12px; 
+            border-radius: 8px; 
+            font-size: 0.9rem; 
+            text-align: center; 
+        }
+        .success-box { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981; }
+        .error-box { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid #f87171; }
 
         .hidden { display: none !important; }
 
         .loading-overlay { 
-            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); 
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); 
             display: none; justify-content: center; align-items: center; 
             z-index: 100;
         }
         .spinner { 
-            width: 30px; height: 30px; border: 3px solid var(--input-bg); 
+            width: 32px; height: 32px; border: 3px solid #334155; 
             border-top-color: var(--primary); border-radius: 50%; 
             animation: spin 0.8s linear infinite; 
         }
@@ -103,8 +142,8 @@
 
 <!-- LOGIN VIEW -->
 <div id="login-section" class="container">
-    <h2>Spyne Login</h2>
-    <p class="subtitle">Enter credentials to continue</p>
+    <h2 style="text-align: center; margin-bottom: 8px;">Spyne Login</h2>
+    <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">Enter credentials to continue</p>
     
     <div class="form-group">
         <label>User Email</label>
@@ -115,6 +154,7 @@
             <option value="lavi.vashisth@spyne.co.in">Lavi Vashisth</option>
             <option value="girish.chandra@spyne.co.in">Girish Chandra</option>
             <option value="drishti.taliyan@spyne.co.in">Drishti Taliyan</option>
+            <option value="kishor@spyne.ai">Kishor</option>
         </select>
     </div>
     
@@ -123,19 +163,17 @@
         <input type="password" id="login_password" placeholder="Enter password" onkeydown="if(event.key === 'Enter') handleLogin()">
     </div>
     
-    <button onclick="handleLogin()">Sign In</button>
-    <div id="login-error" class="error-box" style="display:none; margin-top:15px; padding:12px; font-size:0.8rem;"></div>
+    <button class="submit-btn" onclick="handleLogin()">Sign In</button>
+    <div id="login-error" class="error-box" style="display:none; margin-top:15px;"></div>
 </div>
 
 <!-- TOOL VIEW -->
 <div id="tool-section" class="container hidden">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
-        <div style="text-align: left;">
-            <h2 style="text-align: left; font-size: 1.25rem;">Reprocess Tool</h2>
-            <span id="active-user" style="font-size: 0.75rem; color: var(--text-muted);"></span>
-        </div>
-        <button onclick="location.reload()" style="width:auto; padding: 6px 12px; font-size: 0.75rem; background: #475569; margin: 0;">Logout</button>
+    <div class="header-row">
+        <h2>Reprocess Tool</h2>
+        <button class="logout-btn" onclick="location.reload()">Logout</button>
     </div>
+    <span id="active-user" class="user-badge"></span>
     
     <div class="form-group">
         <label>SKU ID</label>
@@ -143,31 +181,31 @@
     </div>
     
     <div class="form-group">
-        <label>Background ID</label>
+        <label>BACKGROUND ID</label>
         <input type="text" id="bgId" placeholder="Optional Background ID">
     </div>
-    
+
     <div class="form-group">
-        <label>Content Type</label>
-        <select id="type">
+        <label>CONTENT TYPE</label>
+        <select id="content_type">
             <option value="1">Image</option>
             <option value="0">Video</option>
         </select>
     </div>
     
-    <button id="submitBtn" onclick="callAPI()">Reprocess Now</button>
+    <button id="submitBtn" class="submit-btn" onclick="callAPI()">Reprocess Now</button>
     <div id="status-msg"></div>
 </div>
 
 <script>
-    // HARDCODED LOCAL PASSWORDS UPDATED
     const USER_VAULT = {
         "admin@spyne.ai": "admin@123",
         "sarika.rawat@spyne.co.in": "sarika@2003",
         "bhanu.solanki@spyne.co.in": "bhanu123",
         "lavi.vashisth@spyne.co.in": "LAVI@#0000",
         "girish.chandra@spyne.co.in": "girish123",
-        "drishti.taliyan@spyne.co.in": "drishti123"
+        "drishti.taliyan@spyne.co.in": "drishti123",
+        "kishor@spyne.ai": "kishor123"
     };
     
     let loggedInUser = null;
@@ -189,67 +227,64 @@
     }
 
     async function submitToGoogleForm(sku, bgId, email) {
-        // Google Form details based on pre-fill link provided
         const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSf6Tx5CKFLcG-R8djq24_bUetCT780hUUd34XIWZCZeS-0Dbg/formResponse";
-        
         const formData = new URLSearchParams();
-        formData.append("entry.2033020472", sku);        // SKU ID
-        formData.append("entry.189620745", bgId || "");  // Background ID
-        formData.append("entry.213406280", email);       // Email
+        formData.append("entry.2033020472", sku);
+        formData.append("entry.189620745", bgId || "");
+        formData.append("entry.213406280", email);
 
         try {
-            // mode: 'no-cors' is necessary because Google Forms does not return CORS headers
             await fetch(formUrl, {
                 method: "POST",
                 mode: "no-cors",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: formData
             });
-            console.log("Form data sent to Google Sheets");
-        } catch (e) {
-            console.error("Form submission failed", e);
-        }
+        } catch (e) { console.error("Sheet sync failed", e); }
     }
 
     async function callAPI() {
         const skuInput = document.getElementById("sku_id");
         const bgInput = document.getElementById("bgId");
-        const sku = skuInput.value;
-        const bgId = bgInput.value;
+        const sku = skuInput.value.trim();
+        const bgId = bgInput.value.trim();
         const btn = document.getElementById("submitBtn");
         const loader = document.getElementById("loading");
 
-        if (!sku) { showMessage("SKU ID required", "error"); return; }
+        if (!sku) { showMessage("SKU ID is required", "error"); return; }
         
         btn.disabled = true;
         loader.style.display = "flex";
+
+        // Hardcoded values from the JSON provided, with dynamic inputs mixed in
+        const payload = {
+            "stablize": document.getElementById("content_type").value, // Matches Image/Video
+            "colmap": "vanilla",
+            "studio_classifier": "0",
+            "reason": "Reprocess",
+            "prev_status": "done",
+            "process_exposure": "forced_no",
+            "process_mvg": "forced_no",
+            "sku_id": sku,
+            "bgId": bgId || null,
+            "user_email_id": loggedInUser
+        };
 
         try {
             const response = await fetch("https://api.spyne.ai/360/v1/reprocess", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    sku_id: sku,
-                    bgId: bgId || null,
-                    user_email_id: loggedInUser,
-                    stablize: document.getElementById("type").value,
-                    reason: "Web Reprocess Tool",
-                    prev_status: "done"
-                })
+                body: JSON.stringify(payload)
             });
             
             if (response.ok) {
-                // Submit to Google Form on success
                 await submitToGoogleForm(sku, bgId, loggedInUser);
-                
-                showMessage("Reprocess request successful.", "success");
-                
-                // Clear fields after success
+                showMessage("Success! SKU is being reprocessed.", "success");
                 skuInput.value = "";
                 bgInput.value = "";
             } else {
                 const data = await response.json();
-                throw new Error(data.message || "Reprocess failed");
+                throw new Error(data.message || "Failed to process SKU.");
             }
         } catch (e) {
             showMessage(e.message, "error");
